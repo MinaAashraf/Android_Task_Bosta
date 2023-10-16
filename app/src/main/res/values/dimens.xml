@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="font_lg">@dimen/_14ssp</dimen>
+    <dimen name="font_xlg">@dimen/_18ssp</dimen>
+    <dimen name="font_md">@dimen/_12ssp</dimen>
+    <dimen name="font_sm">@dimen/_10ssp</dimen>
+
+    <dimen name="margin_value">16dp</dimen>
+    <dimen name="padding_value">13dp</dimen>
+
+
+
+
+</resources>
