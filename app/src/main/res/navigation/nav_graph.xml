@@ -23,6 +23,19 @@
             android:name="albumId"
             app:argType="integer"
             android:defaultValue="1" />
+        <action
+            android:id="@+id/action_albumFragment_to_photoFragment"
+            app:destination="@id/photoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoFragment"
+        android:name="com.bosta.androidtask_bosta.presentation.photo.PhotoFragment"
+        android:label="PhotoFragment" >
+
+        <argument
+            android:name="photoId"
+            app:argType="integer"
+            android:defaultValue="2" />
     </fragment>
 
 </navigation>

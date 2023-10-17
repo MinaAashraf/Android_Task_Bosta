@@ -13,19 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardElevation="1dp"
-        app:cardCornerRadius="@dimen/_5sdp"
         android:layout_marginTop="@dimen/_8sdp"
-        android:paddingStart="@dimen/padding_value"
-        android:paddingEnd="@dimen/padding_value"
-        android:paddingTop="@dimen/_17sdp"
-        android:paddingBottom="@dimen/_17sdp"
         >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{album.title}"
-            android:textSize="@dimen/font_lg" />
+            android:textSize="@dimen/font_lg"
+            android:layout_margin="@dimen/margin_value"
+            />
 
     </androidx.cardview.widget.CardView>
 

@@ -76,6 +76,10 @@ dependencies {
     // picasso
     implementation ("com.squareup.picasso:picasso:2.8")
 
+   // zoomable image
+    implementation ("com.jsibbold:zoomage:1.3.1")
+
+
 
 }
 kapt {

@@ -12,4 +12,6 @@ interface ProfileRemoteDataSource {
 
     suspend fun getAlbumPhotos (albumId : Int) : Result<List<AlbumPhoto>>
 
+    suspend fun getPhotoById (photoId : Int) : Result<AlbumPhoto>
+
 }

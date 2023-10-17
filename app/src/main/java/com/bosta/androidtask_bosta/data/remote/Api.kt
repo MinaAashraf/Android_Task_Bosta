@@ -18,4 +18,7 @@ interface Api {
     @GET ("photos")
     suspend fun getAlbumPhotos (@Query ("albumId") albumId : Int) : Response<List<AlbumPhoto>>
 
+    @GET("photos")
+    suspend fun getPhotoById (@Query ("id") photoId : Int) : Response<List<AlbumPhoto>>
+
 }

@@ -13,4 +13,5 @@ class ProfileRepositoryImpl @Inject constructor(private val userRemoteDataSource
     override suspend fun getUser(userId: Int): Result<User> = userRemoteDataSource.getUser(userId)
     override suspend fun getAlbums(userId: Int): Result<List<Album>> = userRemoteDataSource.getUserAlbums(userId)
     override suspend fun getAlbumPhotos(albumId: Int): Result<List<AlbumPhoto>> = userRemoteDataSource.getAlbumPhotos(albumId)
+    override suspend fun getPhotoById(photoId: Int): Result<AlbumPhoto> = userRemoteDataSource.getPhotoById(photoId)
 }

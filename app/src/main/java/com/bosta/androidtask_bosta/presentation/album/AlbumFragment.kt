@@ -1,16 +1,14 @@
 package com.bosta.androidtask_bosta.presentation.album
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.SearchView
-import android.widget.SimpleAdapter
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bosta.androidtask_bosta.R
 import com.bosta.androidtask_bosta.databinding.FragmentAlbumBinding
 import com.bosta.androidtask_bosta.domain.model.AlbumPhoto
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +18,8 @@ class AlbumFragment : Fragment() {
 
     private val binding by lazy { FragmentAlbumBinding.inflate(layoutInflater) }
 
+    private val navArgs: AlbumFragmentArgs by navArgs()
+
     private val albumViewModel: AlbumViewModel by viewModels()
 
     private val photos = mutableListOf<AlbumPhoto>()
@@ -28,7 +28,7 @@ class AlbumFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        albumViewModel.getAlbumPhotos(1)
+        albumViewModel.getAlbumPhotos(navArgs.albumId)
     }
 
     override fun onCreateView(
@@ -44,12 +44,19 @@ class AlbumFragment : Fragment() {
 
 
     private fun setUpUi() {
-        setUpGridView()
         setUpSearchView()
+        setUpGridView()
     }
 
     private fun setUpGridView() {
         binding.gridView.adapter = gridAdapter
+        binding.gridView.setOnItemClickListener { parent, view, position, id ->
+            val photoId = photos[position].id!!
+            findNavController().navigate(
+                AlbumFragmentDirections.actionAlbumFragmentToPhotoFragment(photoId)
+            )
+        }
+
     }
 
     private fun setUpSearchView() {
@@ -83,5 +90,7 @@ class AlbumFragment : Fragment() {
             }
         }
     }
+
+
 
 }

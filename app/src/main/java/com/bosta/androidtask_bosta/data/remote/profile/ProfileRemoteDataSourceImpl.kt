@@ -38,4 +38,14 @@ class ProfileRemoteDataSourceImpl @Inject constructor(val api: Api) : ProfileRem
             Result.Failure(e)
         }
     }
+
+    override suspend fun getPhotoById(photoId: Int): Result<AlbumPhoto> {
+        return try {
+            api.getPhotoById(photoId).body()?.let {
+                Result.Success(it[0])
+            } ?: kotlin.run { Result.Failure(DataNotAvailableException()) }
+        } catch (e: Exception) {
+            Result.Failure(e)
+        }
+    }
 }

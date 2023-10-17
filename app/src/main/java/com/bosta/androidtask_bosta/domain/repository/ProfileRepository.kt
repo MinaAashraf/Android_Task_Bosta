@@ -9,4 +9,5 @@ interface ProfileRepository  {
     suspend fun getUser (userId : Int) : Result<User>
     suspend fun getAlbums (userId : Int) : Result<List<Album>>
     suspend fun getAlbumPhotos (albumId : Int) : Result<List<AlbumPhoto>>
+    suspend fun getPhotoById (photoId : Int) : Result<AlbumPhoto>
 }
