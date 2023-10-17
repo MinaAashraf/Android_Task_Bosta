@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bosta.androidtask_bosta.R
 import com.bosta.androidtask_bosta.databinding.FragmentProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,8 @@ class ProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val randomId = (1..10).random()
+        profileViewModel.getUser(randomId)
     }
 
     override fun onCreateView(
@@ -34,12 +36,11 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val randomId = Random(10).nextInt()
-        getUserData(1)
+        observeUserLiveData()
+        binding.userNameTv.setOnClickListener { findNavController().navigate(R.id.action_profileFragment_to_albumFragment) }
     }
 
-    private fun getUserData(userId: Int) {
-        profileViewModel.getUser(userId)
+    private fun observeUserLiveData (){
         profileViewModel.productDetailsLiveData.observe(viewLifecycleOwner) {
             it?.let { binding.user = it }
         }
