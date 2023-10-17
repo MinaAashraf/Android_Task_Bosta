@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.SearchView
 import android.widget.SimpleAdapter
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -21,6 +22,10 @@ class AlbumFragment : Fragment() {
 
     private val albumViewModel: AlbumViewModel by viewModels()
 
+    private val photos = mutableListOf<AlbumPhoto>()
+
+    private val gridAdapter by lazy { PhotosAdapter(requireActivity(), photos) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         albumViewModel.getAlbumPhotos(1)
@@ -34,19 +39,49 @@ class AlbumFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeLiveData()
+        setUpUi()
     }
 
-    private fun setUpGridView(photos: List<AlbumPhoto>) {
-        binding.gridView.adapter = PhotosAdapter(requireActivity(),photos)
+
+    private fun setUpUi() {
+        setUpGridView()
+        setUpSearchView()
     }
 
-    private fun observeLiveData() {
-        albumViewModel.albumPhotos.observe(viewLifecycleOwner) {
-            it?.let {
-                setUpGridView(it)
-            }
+    private fun setUpGridView() {
+        binding.gridView.adapter = gridAdapter
+    }
+
+    private fun setUpSearchView() {
+        binding.searchView.apply {
+            clearFocus()
+            setOnQueryTextListener(object :
+                androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    clearFocus()
+                    return true
+                }
+
+                override fun onQueryTextChange(query: String?): Boolean {
+                    query?.let {
+                        albumViewModel.searchPhotos(it)
+                    }
+                    return false
+                }
+
+            })
         }
     }
 
+    private fun observeLiveData() {
+        albumViewModel.photosMediatorLiveData.observe(viewLifecycleOwner) {
+            it?.let {
+                //  setUpGridView(it)
+                photos.clear()
+                photos.addAll(it)
+                gridAdapter.notifyDataSetChanged()
+            }
+        }
+    }
 
 }

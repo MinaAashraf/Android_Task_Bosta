@@ -2,8 +2,11 @@ package com.bosta.androidtask_bosta.presentation.album
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.bosta.androidtask_bosta.domain.model.Album
 import com.bosta.androidtask_bosta.domain.model.AlbumPhoto
@@ -20,9 +23,18 @@ import kotlin.math.log
 class AlbumViewModel @Inject constructor(private val getAlbumPhotosUseCase: GetAlbumPhotosUseCase) :
     ViewModel() {
 
+
     private val _albumPhotos = MutableLiveData<List<AlbumPhoto>>()
     var albumPhotos: LiveData<List<AlbumPhoto>> = _albumPhotos
 
+    private val _searchAlbumPhotos = MutableLiveData<List<AlbumPhoto>>()
+    var searchAlbumPhotos: LiveData<List<AlbumPhoto>> = _searchAlbumPhotos
+
+
+    val photosMediatorLiveData = MediatorLiveData<List<AlbumPhoto>>().apply {
+        addSource(_albumPhotos) { updatedValue -> value = updatedValue }
+        addSource(_searchAlbumPhotos) { updatedValue -> value = updatedValue }
+    }
 
     fun getAlbumPhotos(albumId: Int) {
         viewModelScope.launch {
@@ -33,6 +45,16 @@ class AlbumViewModel @Inject constructor(private val getAlbumPhotosUseCase: GetA
             }
         }
 
+    }
+
+
+    fun searchPhotos(searchQuery: String) {
+        val resultPhotos = _albumPhotos.value?.let {
+            it.filter { it.title?.lowercase()?.contains(searchQuery.lowercase()) ?: false }
+        }
+        resultPhotos?.let {
+            _searchAlbumPhotos.value = it
+        }
     }
 
 }

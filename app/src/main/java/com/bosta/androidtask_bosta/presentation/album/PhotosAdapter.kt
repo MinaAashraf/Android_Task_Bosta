@@ -12,6 +12,7 @@ import com.bosta.androidtask_bosta.domain.model.AlbumPhoto
 public class PhotosAdapter(context: Context, photos: List<AlbumPhoto>) :
     ArrayAdapter<AlbumPhoto>(context, 0, photos) {
 
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         if (convertView == null) {
             val inflater = LayoutInflater.from(parent.context)
