@@ -5,6 +5,6 @@ import com.bosta.androidtask_bosta.domain.repository.ProfileRepository
 import com.bosta.androidtask_bosta.domain.utils.Result
 import javax.inject.Inject
 
-class GetProfileUseCase @Inject constructor(private val profileRepository: ProfileRepository) {
+class GetUserUseCase @Inject constructor(private val profileRepository: ProfileRepository) {
     suspend fun execute(userId: Int): Result<User> = profileRepository.getUser(userId)
 }
