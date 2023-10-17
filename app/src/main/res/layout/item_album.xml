@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/_40sdp"
         android:text="@{album.title}"
-        android:layout_margin="@dimen/margin_value"
         android:textSize="@dimen/font_md"
         >
 

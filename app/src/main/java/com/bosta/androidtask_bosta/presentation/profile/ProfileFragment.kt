@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), AlbumsListAdapter.OnItemClickListener {
 
     private val binding: FragmentProfileBinding by lazy {
         FragmentProfileBinding.inflate(
@@ -23,10 +23,15 @@ class ProfileFragment : Fragment() {
 
     private val profileViewModel: ProfileViewModel by viewModels()
 
+    private val albumsAdapter: AlbumsListAdapter by lazy { AlbumsListAdapter(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val randomId = (1..10).random()
-        profileViewModel.getUser(randomId)
+        profileViewModel.apply {
+           getUser(randomId)
+           getUserAlbums(randomId)
+        }
     }
 
     override fun onCreateView(
@@ -36,14 +41,30 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeUserLiveData()
-        binding.userNameTv.setOnClickListener { findNavController().navigate(R.id.action_profileFragment_to_albumFragment) }
+        observeLiveData()
+        setUpAlbumsRecyclerView()
     }
 
-    private fun observeUserLiveData (){
-        profileViewModel.productDetailsLiveData.observe(viewLifecycleOwner) {
-            it?.let { binding.user = it }
+
+    private fun setUpAlbumsRecyclerView() {
+        binding.albumsRecyclerView.adapter = albumsAdapter
+    }
+
+    private fun observeLiveData() {
+        profileViewModel.userData.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.user = it
+            }
         }
+        profileViewModel.userAlbums.observe(viewLifecycleOwner) {
+            it?.let {
+                albumsAdapter.submitList(it)
+            }
+        }
+    }
+
+    override fun onAlbumItemClick(albumId: Int) {
+
     }
 
 

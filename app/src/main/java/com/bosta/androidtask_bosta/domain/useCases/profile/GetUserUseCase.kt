@@ -1,4 +1,4 @@
-package com.bosta.androidtask_bosta.domain.useCases.user
+package com.bosta.androidtask_bosta.domain.useCases.profile
 
 import com.bosta.androidtask_bosta.domain.model.User
 import com.bosta.androidtask_bosta.domain.repository.ProfileRepository
