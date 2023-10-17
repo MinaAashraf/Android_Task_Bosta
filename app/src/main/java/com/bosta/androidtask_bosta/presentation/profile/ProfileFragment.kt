@@ -27,11 +27,12 @@ class ProfileFragment : Fragment(), AlbumsListAdapter.OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val randomId = (1..10).random()
         profileViewModel.apply {
-           getUser(randomId)
-           getUserAlbums(randomId)
+            val randomId = (1..10).random()
+            getUser(randomId)
+            getUserAlbums(randomId)
         }
+
     }
 
     override fun onCreateView(
@@ -41,6 +42,7 @@ class ProfileFragment : Fragment(), AlbumsListAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         observeLiveData()
         setUpAlbumsRecyclerView()
     }
@@ -64,7 +66,7 @@ class ProfileFragment : Fragment(), AlbumsListAdapter.OnItemClickListener {
     }
 
     override fun onAlbumItemClick(albumId: Int) {
-
+        findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToAlbumFragment(albumId))
     }
 
 

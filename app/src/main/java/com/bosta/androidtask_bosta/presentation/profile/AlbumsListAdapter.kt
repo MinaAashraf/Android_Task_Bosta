@@ -33,10 +33,6 @@ class AlbumsListAdapter(
         holder.bindData(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return if (super.getItemCount() > 4) 4 else super.getItemCount()
-    }
-
     interface OnItemClickListener {
         fun onAlbumItemClick(albumId: Int)
     }

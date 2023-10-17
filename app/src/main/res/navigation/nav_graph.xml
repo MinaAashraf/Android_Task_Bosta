@@ -10,6 +10,19 @@
         android:name="com.bosta.androidtask_bosta.presentation.profile.ProfileFragment"
         android:label="ProfileFragment" >
 
+        <action
+            android:id="@+id/action_profileFragment_to_albumFragment"
+            app:destination="@id/albumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.bosta.androidtask_bosta.presentation.album.AlbumFragment"
+        android:label="AlbumFragment" >
+
+        <argument
+            android:name="albumId"
+            app:argType="integer"
+            android:defaultValue="1" />
     </fragment>
 
 </navigation>

@@ -1,6 +1,7 @@
 package com.bosta.androidtask_bosta.data.remote
 
 import com.bosta.androidtask_bosta.domain.model.Album
+import com.bosta.androidtask_bosta.domain.model.AlbumPhoto
 import com.bosta.androidtask_bosta.domain.model.User
 import retrofit2.Response
 import retrofit2.http.GET
@@ -13,5 +14,8 @@ interface Api {
 
     @GET("albums")
     suspend fun getUserAlbums(@Query("userId") userId: Int): Response<List<Album>>
+
+    @GET ("photos")
+    suspend fun getAlbumPhotos (@Query ("albumId") albumId : Int) : Response<List<AlbumPhoto>>
 
 }

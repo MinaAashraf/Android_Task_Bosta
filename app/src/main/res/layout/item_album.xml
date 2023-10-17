@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-          <variable
-              name="album"
-              type="com.bosta.androidtask_bosta.domain.model.Album" />
+
+        <variable
+            name="album"
+            type="com.bosta.androidtask_bosta.domain.model.Album" />
     </data>
 
-    <TextView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/_40sdp"
-        android:text="@{album.title}"
-        android:textSize="@dimen/font_md"
+        app:cardElevation="1dp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:paddingStart="@dimen/padding_value"
+        android:paddingEnd="@dimen/padding_value"
+        android:paddingTop="@dimen/_17sdp"
+        android:paddingBottom="@dimen/_17sdp"
         >
 
-    </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{album.title}"
+            android:textSize="@dimen/font_lg" />
+
+    </androidx.cardview.widget.CardView>
+
 </layout>
