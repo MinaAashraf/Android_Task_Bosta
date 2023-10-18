@@ -13,17 +13,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.photo.PhotoFragment">
+        tools:context=".presentation.photo.PhotoFragment"
+        android:background="@color/white"
+        >
 
         <com.jsibbold.zoomage.ZoomageView
             android:id="@+id/photo_view"
-            app:url="@{photo.url}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/share_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:url="@{photo.url}"
             app:zoomage_animateOnReset="true"
             app:zoomage_autoCenter="true"
             app:zoomage_autoResetMode="UNDER"
@@ -31,16 +33,32 @@
             app:zoomage_minScale="0.6"
             app:zoomage_restrictBounds="false"
             app:zoomage_translatable="true"
-            app:zoomage_zoomable="true" />
+            app:zoomage_zoomable="true"
+            />
+
+        <ProgressBar
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:id="@+id/progress_Bar"
+            android:background="@drawable/circular_background"
+            android:elevation="1dp"
+            android:padding="@dimen/_5sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/photo_view"
+            app:layout_constraintBottom_toBottomOf="@id/photo_view"
+          />
+
 
         <Button
             android:id="@+id/share_btn"
             android:layout_width="0dp"
             android:layout_height="@dimen/_40sdp"
-            android:background="@color/colorPrimary"
+            android:background="@color/white"
             android:text="@string/share_label"
             android:textSize="@dimen/font_lg"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

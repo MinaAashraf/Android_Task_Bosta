@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
@@ -20,23 +21,37 @@ import javax.inject.Inject
 import kotlin.math.log
 
 @HiltViewModel
-class AlbumViewModel @Inject constructor(private val getAlbumPhotosUseCase: GetAlbumPhotosUseCase) :
+class AlbumViewModel @Inject constructor(
+    private val getAlbumPhotosUseCase: GetAlbumPhotosUseCase,
+    state: SavedStateHandle
+) :
     ViewModel() {
 
 
     private val _albumPhotos = MutableLiveData<List<AlbumPhoto>>()
-    var albumPhotos: LiveData<List<AlbumPhoto>> = _albumPhotos
 
     private val _searchAlbumPhotos = MutableLiveData<List<AlbumPhoto>>()
-    var searchAlbumPhotos: LiveData<List<AlbumPhoto>> = _searchAlbumPhotos
 
+    private val _loading = MutableLiveData<Boolean>()
+    var loading: LiveData<Boolean> = _loading
+
+    init {
+        val userId = state.get<Int>("albumId")
+        getAlbumPhotos(userId!!)
+        _loading.value = true
+    }
 
     val photosMediatorLiveData = MediatorLiveData<List<AlbumPhoto>>().apply {
-        addSource(_albumPhotos) { updatedValue -> value = updatedValue }
+        addSource(_albumPhotos) { updatedValue ->
+            run {
+                value = updatedValue
+                _loading.value = false
+            }
+        }
         addSource(_searchAlbumPhotos) { updatedValue -> value = updatedValue }
     }
 
-    fun getAlbumPhotos(albumId: Int) {
+    private fun getAlbumPhotos(albumId: Int) {
         viewModelScope.launch {
             getAlbumPhotosUseCase.execute(albumId).onSuccess {
                 _albumPhotos.value = it

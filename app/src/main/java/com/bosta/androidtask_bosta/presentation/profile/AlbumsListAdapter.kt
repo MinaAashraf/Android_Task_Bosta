@@ -24,7 +24,9 @@ class AlbumsListAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemAlbumBinding.inflate(inflater, parent, false)
         val holder = MyViewHolder(binding)
-        binding.root.setOnClickListener { onItemClickListener.onAlbumItemClick(holder.adapterPosition) }
+        binding.root.setOnClickListener {
+            onItemClickListener.onAlbumItemClick(getItem(holder.adapterPosition).albumId!!)
+        }
 
         return holder
     }

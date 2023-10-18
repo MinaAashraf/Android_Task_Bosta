@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import com.bosta.androidtask_bosta.databinding.ItemPhotoBinding
 import com.bosta.androidtask_bosta.domain.model.AlbumPhoto
-import com.bosta.androidtask_bosta.presentation.profile.setUrl
+import com.bosta.androidtask_bosta.presentation.utils.setUrl
 import com.jsibbold.zoomage.ZoomageView
 
 

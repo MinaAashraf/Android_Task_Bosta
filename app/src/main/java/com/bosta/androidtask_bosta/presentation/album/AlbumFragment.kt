@@ -9,8 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bosta.androidtask_bosta.MainActivity
+import com.bosta.androidtask_bosta.R
 import com.bosta.androidtask_bosta.databinding.FragmentAlbumBinding
 import com.bosta.androidtask_bosta.domain.model.AlbumPhoto
+import com.bosta.androidtask_bosta.presentation.utils.hide
+import com.bosta.androidtask_bosta.presentation.utils.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,18 +22,11 @@ class AlbumFragment : Fragment() {
 
     private val binding by lazy { FragmentAlbumBinding.inflate(layoutInflater) }
 
-    private val navArgs: AlbumFragmentArgs by navArgs()
-
     private val albumViewModel: AlbumViewModel by viewModels()
 
     private val photos = mutableListOf<AlbumPhoto>()
 
     private val gridAdapter by lazy { PhotosAdapter(requireActivity(), photos) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        albumViewModel.getAlbumPhotos(navArgs.albumId)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +35,7 @@ class AlbumFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as MainActivity).title = getString(R.string.album_photos_title)
         observeLiveData()
         setUpUi()
     }
@@ -89,8 +87,15 @@ class AlbumFragment : Fragment() {
                 gridAdapter.notifyDataSetChanged()
             }
         }
+        albumViewModel.loading.observe(viewLifecycleOwner) {
+            it?.let {
+                if (!it)
+                    binding.progressBar.hide()
+                else
+                    binding.progressBar.show()
+            }
+        }
     }
-
 
 
 }

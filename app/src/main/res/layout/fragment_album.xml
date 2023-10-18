@@ -15,20 +15,21 @@
         android:layout_height="match_parent"
         tools:context=".presentation.album.AlbumFragment">
 
+
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_view"
             android:layout_width="0dp"
             android:layout_height="@dimen/_40sdp"
             android:layout_margin="@dimen/margin_value"
             android:background="@drawable/rounded_background"
+            android:focusable="false"
             app:hideNavigationIcon="true"
+            app:iconifiedByDefault="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:iconifiedByDefault="false"
-            app:searchHintIcon="@null"
             app:queryHint="Search with photo title.."
-            android:focusable="false"
+            app:searchHintIcon="@null"
 
 
             />
@@ -46,6 +47,18 @@
 
             />
 
+        <ProgressBar
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:id="@+id/progress_Bar"
+            android:background="@drawable/circular_background"
+            android:elevation="1dp"
+            android:padding="@dimen/_5sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/grid_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/_150sdp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

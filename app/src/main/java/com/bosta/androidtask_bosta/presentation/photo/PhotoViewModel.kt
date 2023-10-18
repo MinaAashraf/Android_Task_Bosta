@@ -3,6 +3,7 @@ package com.bosta.androidtask_bosta.presentation.photo
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bosta.androidtask_bosta.domain.model.AlbumPhoto
@@ -16,16 +17,26 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PhotoViewModel @Inject constructor(private val getPhotoByIdUseCase: GetPhotoByIdUseCase) :
+class PhotoViewModel @Inject constructor(private val getPhotoByIdUseCase: GetPhotoByIdUseCase, state : SavedStateHandle) :
     ViewModel() {
 
     private val _photoLiveData = MutableLiveData<AlbumPhoto>()
     var photoLiveData: LiveData<AlbumPhoto> = _photoLiveData
 
+    private val _loading = MutableLiveData<Boolean>()
+    var loading: LiveData<Boolean> = _loading
+
+    init {
+        val photoId = state.get<Int>("photoId")
+        getPhotoById(photoId!!)
+        _loading.value = true
+    }
+
     fun getPhotoById(photoId: Int) {
         viewModelScope.launch {
             getPhotoByIdUseCase.execute(photoId).onSuccess {
                 _photoLiveData.value = it
+                _loading.value = false
             }.onFailure {
                 Log.d("api exception: ", it.message.toString())
             }

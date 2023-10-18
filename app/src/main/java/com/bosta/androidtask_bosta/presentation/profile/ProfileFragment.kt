@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bosta.androidtask_bosta.MainActivity
 import com.bosta.androidtask_bosta.R
 import com.bosta.androidtask_bosta.databinding.FragmentProfileBinding
+import com.bosta.androidtask_bosta.presentation.utils.hide
+import com.bosta.androidtask_bosta.presentation.utils.show
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
@@ -21,19 +24,9 @@ class ProfileFragment : Fragment(), AlbumsListAdapter.OnItemClickListener {
         )
     }
 
-    private val profileViewModel: ProfileViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels ()
 
     private val albumsAdapter: AlbumsListAdapter by lazy { AlbumsListAdapter(this) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        profileViewModel.apply {
-            val randomId = (1..10).random()
-            getUser(randomId)
-            getUserAlbums(randomId)
-        }
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +35,7 @@ class ProfileFragment : Fragment(), AlbumsListAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        (requireActivity() as MainActivity).title = getString(R.string.profile_title)
         observeLiveData()
         setUpAlbumsRecyclerView()
     }
@@ -63,11 +56,24 @@ class ProfileFragment : Fragment(), AlbumsListAdapter.OnItemClickListener {
                 albumsAdapter.submitList(it)
             }
         }
+
+        profileViewModel.loading.observe(viewLifecycleOwner){
+               it?.let {
+                   if (!it)
+                       binding.progressBar.hide()
+                   else
+                       binding.progressBar.show()
+
+               }
+        }
+
     }
 
     override fun onAlbumItemClick(albumId: Int) {
-        findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToAlbumFragment(albumId))
+        findNavController().navigate(
+            ProfileFragmentDirections.actionProfileFragmentToAlbumFragment(albumId)
+        )
     }
-
-
 }
+
+
