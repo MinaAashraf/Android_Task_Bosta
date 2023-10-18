@@ -35,8 +35,9 @@ class AlbumViewModel @Inject constructor(
     private val _loading = MutableLiveData<Boolean>()
     var loading: LiveData<Boolean> = _loading
 
+    private val userId = state.get<Int>("albumId")
+
     init {
-        val userId = state.get<Int>("albumId")
         getAlbumPhotos(userId!!)
         _loading.value = true
     }
@@ -69,6 +70,12 @@ class AlbumViewModel @Inject constructor(
         }
         resultPhotos?.let {
             _searchAlbumPhotos.value = it
+        }
+    }
+
+    fun handleConnectivityChange(isConnected: Boolean) {
+        if (isConnected && loading.value == true) {
+            getAlbumPhotos(userId!!)
         }
     }
 

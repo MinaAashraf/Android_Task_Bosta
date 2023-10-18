@@ -1,18 +1,18 @@
 package com.bosta.androidtask_bosta.presentation.album
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.bosta.androidtask_bosta.MainActivity
+import com.bosta.androidtask_bosta.presentation.MainActivity
 import com.bosta.androidtask_bosta.R
 import com.bosta.androidtask_bosta.databinding.FragmentAlbumBinding
 import com.bosta.androidtask_bosta.domain.model.AlbumPhoto
+import com.bosta.androidtask_bosta.presentation.SharedViewModel
 import com.bosta.androidtask_bosta.presentation.utils.hide
 import com.bosta.androidtask_bosta.presentation.utils.show
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +23,8 @@ class AlbumFragment : Fragment() {
     private val binding by lazy { FragmentAlbumBinding.inflate(layoutInflater) }
 
     private val albumViewModel: AlbumViewModel by viewModels()
+
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private val photos = mutableListOf<AlbumPhoto>()
 
@@ -81,7 +83,6 @@ class AlbumFragment : Fragment() {
     private fun observeLiveData() {
         albumViewModel.photosMediatorLiveData.observe(viewLifecycleOwner) {
             it?.let {
-                //  setUpGridView(it)
                 photos.clear()
                 photos.addAll(it)
                 gridAdapter.notifyDataSetChanged()
@@ -95,6 +96,16 @@ class AlbumFragment : Fragment() {
                     binding.progressBar.show()
             }
         }
+        sharedViewModel.isConnected.observe(viewLifecycleOwner) { isConnected ->
+            isConnected?.let {
+                // reload data when being online
+                handleConnectivityChange(it)
+            }
+        }
+    }
+
+    private fun handleConnectivityChange(isConnected: Boolean) {
+           albumViewModel.handleConnectivityChange(isConnected)
     }
 
 

@@ -31,16 +31,17 @@ class ProfileViewModel @Inject constructor(
     private val _loading = MutableLiveData<Boolean>()
     var loading: LiveData<Boolean> = _loading
 
+    var randomId = (1..10).random()
+
     init {
-        val randomId = (1..10).random()
-        getUser(randomId)
-        getUserAlbums(randomId)
+        getUser()
+        getUserAlbums()
         _loading.value = true
     }
 
-    private fun getUser(userId: Int) {
+    private fun getUser() {
         viewModelScope.launch {
-            getUserUseCase.execute(userId).onSuccess {
+            getUserUseCase.execute(randomId).onSuccess {
                 _userData.value = it
             }.onFailure {
                 Log.d("api exception: ", it.message.toString())
@@ -48,14 +49,21 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun getUserAlbums(userId: Int) {
+    private fun getUserAlbums() {
         viewModelScope.launch {
-            getUserAlbumsUseCase.execute(userId).onSuccess {
+            getUserAlbumsUseCase.execute(randomId).onSuccess {
                 _userAlbums.value = it
                 _loading.value = false
             }.onFailure {
                 Log.d("api exception: ", it.message.toString())
             }
+        }
+    }
+
+    fun handleConnectivityChange (isConnected : Boolean){
+        if (isConnected && loading.value == true) {
+            getUser()
+            getUserAlbums()
         }
     }
 

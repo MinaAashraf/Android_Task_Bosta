@@ -5,19 +5,16 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
-import com.bosta.androidtask_bosta.MainActivity
-import com.bosta.androidtask_bosta.R
+import com.bosta.androidtask_bosta.presentation.MainActivity
 import com.bosta.androidtask_bosta.databinding.FragmentPhotoBinding
-import com.bosta.androidtask_bosta.presentation.album.AlbumFragmentArgs
+import com.bosta.androidtask_bosta.presentation.SharedViewModel
 import com.bosta.androidtask_bosta.presentation.utils.hide
 import com.bosta.androidtask_bosta.presentation.utils.show
 import com.jsibbold.zoomage.ZoomageView
@@ -30,6 +27,9 @@ class PhotoFragment : Fragment() {
     private val binding by lazy { FragmentPhotoBinding.inflate(layoutInflater) }
 
     private val photoViewModel: PhotoViewModel by viewModels()
+
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,13 +52,19 @@ class PhotoFragment : Fragment() {
                 if (!it) {
                     binding.progressBar.hide()
                     binding.shareBtn.show()
-                }
-                else {
+                } else {
                     binding.progressBar.show()
                     binding.shareBtn.hide()
                 }
             }
         }
+        sharedViewModel.isConnected.observe(viewLifecycleOwner) { isConnected ->
+            isConnected?.let {
+                // reload data when being online
+                handleConnectivityChange(it)
+            }
+        }
+
     }
 
     private fun setUpShareBtn() {
@@ -82,5 +88,11 @@ class PhotoFragment : Fragment() {
         intent.putExtra(Intent.EXTRA_STREAM, uri)
         startActivity(Intent.createChooser(intent, ""))
     }
+
+    private fun handleConnectivityChange(isConnected: Boolean) {
+        photoViewModel.handleConnectivityChange(isConnected)
+
+    }
+
 
 }

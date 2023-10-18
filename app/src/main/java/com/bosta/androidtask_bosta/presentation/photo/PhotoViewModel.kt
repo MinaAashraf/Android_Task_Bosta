@@ -17,7 +17,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PhotoViewModel @Inject constructor(private val getPhotoByIdUseCase: GetPhotoByIdUseCase, state : SavedStateHandle) :
+class PhotoViewModel @Inject constructor(
+    private val getPhotoByIdUseCase: GetPhotoByIdUseCase,
+    state: SavedStateHandle
+) :
     ViewModel() {
 
     private val _photoLiveData = MutableLiveData<AlbumPhoto>()
@@ -26,13 +29,14 @@ class PhotoViewModel @Inject constructor(private val getPhotoByIdUseCase: GetPho
     private val _loading = MutableLiveData<Boolean>()
     var loading: LiveData<Boolean> = _loading
 
+    private val photoId = state.get<Int>("photoId")
+
     init {
-        val photoId = state.get<Int>("photoId")
         getPhotoById(photoId!!)
         _loading.value = true
     }
 
-    fun getPhotoById(photoId: Int) {
+    private fun getPhotoById(photoId: Int) {
         viewModelScope.launch {
             getPhotoByIdUseCase.execute(photoId).onSuccess {
                 _photoLiveData.value = it
@@ -44,5 +48,10 @@ class PhotoViewModel @Inject constructor(private val getPhotoByIdUseCase: GetPho
         }
     }
 
+    fun handleConnectivityChange(isConnected: Boolean) {
+        if (isConnected && loading.value == true) {
+            getPhotoById(photoId!!)
+        }
+    }
 
 }
