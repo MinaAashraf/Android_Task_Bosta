@@ -16,6 +16,7 @@ import com.bosta.androidtask_bosta.domain.useCases.profile.GetAlbumPhotosUseCase
 import com.bosta.androidtask_bosta.domain.utils.onFailure
 import com.bosta.androidtask_bosta.domain.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.log
@@ -53,9 +54,9 @@ class AlbumViewModel @Inject constructor(
     }
 
     private fun getAlbumPhotos(albumId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getAlbumPhotosUseCase.execute(albumId).onSuccess {
-                _albumPhotos.value = it
+                _albumPhotos.postValue(it)
             }.onFailure {
                 Log.d("api exception: ", it.message.toString())
             }

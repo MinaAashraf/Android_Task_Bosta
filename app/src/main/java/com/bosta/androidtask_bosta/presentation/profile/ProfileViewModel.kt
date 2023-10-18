@@ -13,6 +13,7 @@ import com.bosta.androidtask_bosta.domain.useCases.profile.GetUserUseCase
 import com.bosta.androidtask_bosta.domain.utils.onFailure
 import com.bosta.androidtask_bosta.domain.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,9 +41,9 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getUser() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getUserUseCase.execute(randomId).onSuccess {
-                _userData.value = it
+                _userData.postValue(it)
             }.onFailure {
                 Log.d("api exception: ", it.message.toString())
             }
@@ -50,17 +51,17 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getUserAlbums() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getUserAlbumsUseCase.execute(randomId).onSuccess {
-                _userAlbums.value = it
-                _loading.value = false
+                _userAlbums.postValue(it)
+                _loading.postValue(false)
             }.onFailure {
                 Log.d("api exception: ", it.message.toString())
             }
         }
     }
 
-    fun handleConnectivityChange (isConnected : Boolean){
+    fun handleConnectivityChange(isConnected: Boolean) {
         if (isConnected && loading.value == true) {
             getUser()
             getUserAlbums()

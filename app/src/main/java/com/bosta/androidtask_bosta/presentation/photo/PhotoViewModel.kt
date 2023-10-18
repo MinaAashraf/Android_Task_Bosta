@@ -37,10 +37,10 @@ class PhotoViewModel @Inject constructor(
     }
 
     private fun getPhotoById(photoId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getPhotoByIdUseCase.execute(photoId).onSuccess {
-                _photoLiveData.value = it
-                _loading.value = false
+                _photoLiveData.postValue(it)
+                _loading.postValue(false)
             }.onFailure {
                 Log.d("api exception: ", it.message.toString())
             }
